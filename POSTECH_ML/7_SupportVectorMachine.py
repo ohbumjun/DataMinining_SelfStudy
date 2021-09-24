@@ -1,4 +1,5 @@
 # 임의로 data를 generate 하기
+from sklearn import svm
 import cvxpy as cvx
 import numpy as np
 import matplotlib.pyplot as plt
@@ -272,3 +273,90 @@ plt.xlim([0, 8])
 plt.ylim([-4, 3])
 plt.show()
 # 바로 위 그래프보다 훨씬 더 나은 것을 확인할 수 있다.
+
+
+# 조금 더 Compact 버전
+# Compact Version
+X = np.vstack([X1, X0])
+# C1에 속하는 것은 1, C0에 속하는 것은 -1
+y = np.vstack([np.ones([N, 1]), -np.ones([M, 1])])
+
+m = N + M
+
+w = cvx.Variable([3, 1])
+d = cvx.Variable([m, 1])
+
+obj = cvx.Minimize(cvx.norm(w, 2) + g*(np.ones((1, m))*d))
+const = [cvx.multiply(y, X*w) >= 1 - d, d >= 0]
+prob = cvx.Problem(obj, const).solve(solver='ECOS')
+
+w = w.value
+
+xp = np.linspace(-1, 9, 100).reshape(-1, 1)
+yp = -w[1, 0]/w[2, 0]*xp - w[0, 0]/w[2, 0]
+
+plt.figure(figsize=(10, 8))
+plt.plot(X1[:, 1], X1[:, 2], 'ro', alpha=0.4, label='C!')
+plt.plot(X0[:, 1], X0[:, 2], 'bo', alpha=0.4, label='C0')
+# 원래 직선 ( 우리가 맨 처음에 outlier 없이 그린 직선)
+plt.plot(xp, ypt, 'k', alpha=0.5, label='True')
+plt.plot(xp, ypt-1, '--k', alpha=0.2)
+plt.plot(xp, ypt+1, '--k', alpha=0.2)
+plt.plot(xp, yp, 'g', linewidth=3, label='SVM')
+plt.plot(xp, yp-1/w[2, 0], '--g')
+plt.plot(xp, yp+1/w[2, 0], '--g')
+plt.title('When Outliers Exist', fontsize=15)
+plt.xlabel(r'$x_1$', fontsize=15)
+plt.ylabel(r'$x_2$', fontsize=15)
+plt.legend(loc=1, fontsize=12)
+plt.axis('equal')
+plt.xlim([0, 8])
+plt.ylim([-4, 3])
+plt.show()
+# 같은 결과가 나오는 것을 확인할 수 있다
+
+# Skit-Learn Version --------------
+X1 = np.hstack([x1[C1], x2[C1]])
+X0 = np.hstack([x1[C0], x2[C0]])
+X = np.vstack([X1, X0])
+
+N = X1.shape[0]
+M = X0.shape[0]
+
+y = np.vstack([np.ones([N, 1]), np.zeros([M, 1])])
+
+
+# clf : classifier
+clf = svm.SVC(kernel='linear')
+clf.fit(X, y)
+
+clf.predict([[6, 2]])
+
+w = np.zeros([3, 1])
+w[1, 0] = clf.coef_[0, 0]
+w[2, 0] = clf.coef_[0, 1]
+w[0, 0] = clf.intercept_[0]
+print(w)
+
+xp = np.linspace(-1, 9, 100).reshape(-1, 1)
+yp = -w[1, 0]/w[2, 0]*xp - w[0, 0]/w[2, 0]
+
+plt.figure(figsize=(10, 8))
+plt.plot(X1[:, 0], X1[:, 1], 'ro', alpha=0.4, label='C!')
+plt.plot(X0[:, 0], X0[:, 1], 'bo', alpha=0.4, label='C0')
+# 원래 직선 ( 우리가 맨 처음에 outlier 없이 그린 직선)
+plt.plot(xp, ypt, 'k', alpha=0.5, label='True')
+plt.plot(xp, ypt-1, '--k', alpha=0.2)
+plt.plot(xp, ypt+1, '--k', alpha=0.2)
+plt.plot(xp, yp, 'g', linewidth=3, label='SVM')
+plt.plot(xp, yp-1/w[2, 0], '--g')
+plt.plot(xp, yp+1/w[2, 0], '--g')
+plt.title('When Outliers Exist', fontsize=15)
+plt.xlabel(r'$x_1$', fontsize=15)
+plt.ylabel(r'$x_2$', fontsize=15)
+plt.legend(loc=1, fontsize=12)
+plt.axis('equal')
+plt.xlim([0, 8])
+plt.ylim([-4, 3])
+plt.show()
+# 같은 결과가 나오는 것을 확인할 수 있다
