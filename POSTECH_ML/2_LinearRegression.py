@@ -175,7 +175,7 @@ x = np.array([0.1, 0.4, 0.7, 1.2, 1.3, 1.7, 2.2, 2.8,
               3.0, 4.0, 4.3, 4.4, 4.9]).reshape(-1, 1)
 y = np.array([0.5, 0.9, 1.1, 1.5, 1.5, 2.0, 2.2, 2.8,
               2.7, 3.0, 3.5, 3.7, 3.9]).reshape(-1, 1)
-
+##
 reg = linear_model.LinearRegression()
 reg.fit(x, y)
 
