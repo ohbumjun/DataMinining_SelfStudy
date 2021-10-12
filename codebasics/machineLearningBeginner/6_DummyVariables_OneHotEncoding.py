@@ -114,3 +114,5 @@ model.predict([[1, 0, 2800]])
 
 # with 3400 sqr fit area in west windsor
 model.predict([[0, 1, 3400]])
+
+#
