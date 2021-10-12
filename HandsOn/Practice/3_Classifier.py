@@ -283,3 +283,56 @@ plt.plot([0.0, recall_90_precision], [0.9, 0.9], "r:")
 plt.plot([recall_90_precision], [0.9], "ro")
 save_fig("precision_vs_recall_plot")
 plt.show()
+# 파이썬 ≥3.5 필수
+assert sys.version_info >= (3, 5)
+
+# 사이킷런 ≥0.20 필수
+assert sklearn.__version__ >= "0.20"
+
+# 공통 모듈 임포트
+
+# 노트북 실행 결과를 동일하게 유지하기 위해
+np.random.seed(42)
+
+# 깔끔한 그래프 출력을 위해
+%matplotlib inline
+mpl.rc('axes', labelsize=14)
+mpl.rc('xtick', labelsize=12)
+mpl.rc('ytick', labelsize=12)
+
+
+# 그림을 저장할 위치
+PROJECT_ROOT_DIR = "."
+CHAPTER_ID = "Linear Models"
+IMAGES_PATH = os.path.join(PROJECT_ROOT_DIR, "images", CHAPTER_ID)
+os.makedirs(IMAGES_PATH, exist_ok=True)
+
+
+def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
+    path = os.path.join(IMAGES_PATH, fig_id + "." + fig_extension)
+    print("그림 저장:", fig_id)
+    if tight_layout:
+        plt.tight_layout()
+    plt.savefig(path, format=fig_extension, dpi=resolution)
+
+# Linear Regression
+
+# 모델을 훈련시킨다는 것은, 모델이 훈련 세트에 가장 잘 맞도록 모델
+# 파라미터를 설정하는 것이다
+
+# 이를 위해 먼저, 모델이 훈련 데이터에 얼마나 잘 들어맞는지 측정해야 한다
+# RMSE를 통해, 회귀 성능 측정을 할 수 있다
+# 즉, RMSE를 최소화 하는 파라미터들을 찾으면 된다
+
+# 정규방정식.
+# 즉, 해당 파라미터를 찾는 공식이 따로 존재한다 (노트북에 붙여둔 것 )
+
+
+**식 4-4: 정규 방정식**
+
+$\hat{\boldsymbol{\theta}} = (\mathbf{X} ^ T \mathbf{X}) ^ {-1} \mathbf{X} ^ T \mathbf{y}$
+
+# 랜덤 데이터 생성하기
+
+X = 2 * np.random.rand(100, 1)
+y = 4 + 3 * X + np.random.randn(100, 1)
