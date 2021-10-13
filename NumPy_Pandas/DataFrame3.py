@@ -108,6 +108,7 @@ zero_abalone_df  # 실수로 바뀜 ( 우선순위 : 실수 > 정수 )
 # 결측치를 결측치가 속한 컬럼의 평균값으로 대체하기
 nan_abalon_df.mean()
 nan_abalon_df = nan_abalon_df.fillna(nan_abalon_df.mean())
+#
 
 # 아래와 같이 특정 column 및 행렬에 대한 작업도 가능하다
 nan_abalon_df['length'].fillna(nan_abalon_df['length'].mean())
