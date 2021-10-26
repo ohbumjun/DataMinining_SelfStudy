@@ -1,3 +1,5 @@
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.pipeline import FeatureUnion
 from sklearn.preprocessing import OneHotEncoder
@@ -138,3 +140,18 @@ svm_clf = SVC(gamma="auto")
 # 이를 이용해서 예측하기
 X_test = preprocess_pipeline.transform(test_data)
 y_pred = svm_clf.predict(X_test)
+
+
+# 교차 검증을 통해, 모델이 얼마나 좋은지 평가하기
+
+svm_scores = cross_val_score(svm_clf, X_train, y_train, cv=10)
+svm_scores.mean()
+# 약 73% --> 80% 까지 올리기
+
+# RandomForestClassifier를 활용하기
+
+forest_clf = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42)
+forest_scores = cross_val_score(forest_clf, X_train, y_train, cv=10)
+forest_scores.mean()
